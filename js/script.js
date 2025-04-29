@@ -33,17 +33,17 @@ document.addEventListener('DOMContentLoaded', () => {
   const fileInput = document.getElementById("fileInput");
   const messageDiv = document.getElementById("uploadMessage");
 
-  playRiff(); // Reproducir riff al iniciar la carga
   
   fileInput.addEventListener('change', async (event) => {
     event.preventDefault();
     if (!fileInput.files.length) return;
-
+    
     const formData = new FormData();
     Array.from(fileInput.files).forEach((file) =>
       formData.append("archivo[]", file)
-    );
-
+  );
+  
+    playRiff(); // Reproducir riff al iniciar la carga
     showSpinner(); // Mostrar spinner dependiendo del tema
 
     try {
