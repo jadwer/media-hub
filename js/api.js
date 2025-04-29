@@ -1,4 +1,3 @@
-console.log("carga api.js")
 // === CONFIG ===
 const API_URL = `${window.location.origin}/api/v1.php`;
 const UPLOAD_URL = `${window.location.origin}/api/upload.php`;

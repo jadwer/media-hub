@@ -1,3 +1,4 @@
+const UPLOAD_URL = `${window.location.origin}/api/upload.php`;
 // Highlight al arrastrar sobre la zona de carga
 const dropzone = document.querySelector(".dropzone");
 const input = dropzone.querySelector("input");
@@ -46,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
     showSpinner(); // Mostrar spinner dependiendo del tema
 
     try {
-      const response = await fetch("./api/upload.php", {
+      const response = await fetch(UPLOAD_URL, {
         method: "POST",
         body: formData,
       });
