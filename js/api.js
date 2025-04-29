@@ -1,6 +1,7 @@
 console.log("carga api.js")
 // === CONFIG ===
 const API_URL = `${window.location.origin}/api/v1.php`;
+const UPLOAD_URL = `${window.location.origin}/api/upload.php`;
 const FILES_PER_PAGE = 20;
 
 
@@ -33,7 +34,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
     Array.from(fileInput.files).forEach(file => formData.append('archivo[]', file));
 
     try {
-      const response = await fetch('./api/upload.php', {
+      const response = await fetch(UPLOAD_URL, {
         method: 'POST',
         body: formData
       });
