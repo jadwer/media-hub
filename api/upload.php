@@ -71,17 +71,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['archivo'])) {
 
         // Generar nombre seguro
 
-        $clean = preg_replace('~[^a-zA-Z0-9 _.-]~', '', pathinfo($originalName, PATHINFO_FILENAME));
-        $clean = preg_replace('~\\s+~', '_', $clean);       // espacios → guión bajo
-        $clean = trim($clean, '._');                        // limpia bordes
-        // si existe duplicado, agrega -1, -2…
+        // 1. normaliza tildes/ñ  →  a, n, etc.
+        $slug = iconv('UTF-8', 'ASCII//TRANSLIT', pathinfo($originalName, PATHINFO_FILENAME));
+
+        // 2. elimina todo lo que no sea alfanumérico, espacio, guión o punto
+        $slug = preg_replace('~[^A-Za-z0-9 _.-]~', '', $slug);
+
+        // 3. espacios ↦ guiones bajos, bordes limpios
+        $slug = preg_replace('~\\s+~', '_', $slug);
+        $slug = trim($slug, '._');
+
+        // 4. evita duplicados:  Cancion.mp3  →  Cancion.mp3  / Cancion-1.mp3
         $counter = 0;
-        $safeName = $clean . '.' . $extension;
+        $safeName = $slug . '.' . $extension;
         while (file_exists($uploadDir . $safeName)) {
             $counter++;
-            $safeName = $clean . '-' . $counter . '.' . $extension;
+            $safeName = $slug . '-' . $counter . '.' . $extension;
         }
-
         $targetPath = $uploadDir . $safeName;
 
         // Mover el archivo
