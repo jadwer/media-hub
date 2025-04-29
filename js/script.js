@@ -80,7 +80,6 @@ document.addEventListener('DOMContentLoaded', () => {
           <div></div><div></div><div></div><div></div><div></div>
         </div>
       `;
-      playRiff(); // Reproducir riff de guitarra
     } else {
       spinner.innerHTML = `<div class="spinner"></div>`;
     }
@@ -94,11 +93,15 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function playRiff() {
-  const riff = document.getElementById('riffPlayer');
-  if (riff) {
-    riff.muted=false; // asegurarse de que no esté silenciado
-    riff.currentTime = 0;    // desde el inicio
-    riff.volume = 0.5;       // volumen moderado
-    riff.play().catch(() => {/*silenciar errores de autoplay*/});
-  }
-}
+  const riff   = document.getElementById('riffPlayer');
+  const dz     = document.querySelector('.dropzone');
+  
+  ['mousedown', 'dragenter'].forEach(evt =>
+    dz.addEventListener(evt, () => {
+      if (document.body.classList.contains('metal-mode')) {
+        riff.currentTime = 0;
+        riff.volume = 0.6;
+        riff.play().catch(()=>{});   // silencioso si el user agent lo bloquea
+      }
+    }, { once:false })
+  );}
