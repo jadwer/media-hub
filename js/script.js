@@ -17,7 +17,7 @@ dropzone.addEventListener("drop", (e) => {
   e.preventDefault();
   dropzone.classList.remove("hover");
   input.files = e.dataTransfer.files;
-  document.getElementById("uploadForm").submit();
+  input.dispatchEvent(new Event('change', { bubbles:true }));
 });
 
 function playAudio(fileUrl) {
@@ -28,14 +28,13 @@ function playAudio(fileUrl) {
   player.play();
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  const uploadForm = document.getElementById("uploadForm");
+document.addEventListener('DOMContentLoaded', () => {
   const fileInput = document.getElementById("fileInput");
   const messageDiv = document.getElementById("uploadMessage");
 
   playRiff(); // Reproducir riff al iniciar la carga
   
-  uploadForm.addEventListener("change", async (event) => {
+  fileInput.addEventListener('change', async (event) => {
     event.preventDefault();
     if (!fileInput.files.length) return;
 
