@@ -21,39 +21,6 @@ document.addEventListener('DOMContentLoaded', ()=>{
   addControlListeners();
   fetchFiles(currentOrder);
 
-  const uploadForm = document.getElementById('uploadForm');
-  const fileInput = document.getElementById('fileInput');
-  const messageDiv = document.getElementById('uploadMessage');
-
-  uploadForm.addEventListener('change', async (event) => {
-    event.preventDefault();
-    if (!fileInput.files.length) return;
-
-    const formData = new FormData();
-    Array.from(fileInput.files).forEach(file => formData.append('archivo[]', file));
-
-    try {
-      const response = await fetch(UPLOAD_URL, {
-        method: 'POST',
-        body: formData
-      });
-
-      if (response.redirected) {
-        window.location.href = response.url;
-      } else {
-        const text = await response.text();
-        showMessage('success', '¡Archivos subidos correctamente!');
-        fileInput.value = ''; // Limpiar input
-      }
-    } catch (error) {
-      showMessage('error', 'Error al subir los archivos.');
-      console.error('Error al subir:', error);
-    }
-  });
-
-  function showMessage(type, text) {
-    messageDiv.innerHTML = `<div style="padding:10px; border-radius:8px; background:${type==='success' ? '#28a745' : '#dc3545'}; color:white;">${text}</div>`;
-  }
 });
 // === FETCH ===
 async function fetchFiles(order=currentOrder){
