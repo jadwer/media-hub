@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>🎙️ Biblioteca de Audio | Jaz & Gabo</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+    <!-- Favicon & (nuevo) logo SVG mono  -->  
+    <link rel="icon" href="./assets/logo.svg" type="image/svg+xml" />
+    
+    <!-- Viewport -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+    <!-- ‑‑‑ SEO / Social meta restored  ‑‑‑ -->
+    <meta name="description" content="Sube y comparte tus ideas, música o episodios de audio fácilmente." />
+    <meta name="keywords" content="audio, música, podcast, upload, compartir, Jazmín, Gabino" />
+    <meta name="author" content="Gabino Ramírez" />
+    
+    <!-- PWA bar colour para tema rosa‑metal por defecto -->
+    <meta name="theme-color" content="#ff4da6" />
+    
+    <!-- Indexing -->
+    <meta name="robots" content="index, follow" />
+    <meta name="googlebot" content="index, follow" />
+    <meta name="google" content="notranslate" />
+  
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@rgabinoramirez" />
+    <meta name="twitter:title" content="🎙️ Biblioteca de Audio | Jaz & Gabo" />
+    <meta name="twitter:description" content="Sube y comparte tus ideas, música o episodios de audio fácilmente." />
+    <meta name="twitter:image" content="https://pbs.twimg.com/profile_images/1194065257712492544/3bt23z3Q_200x200.jpg" />
+  
+    <!-- Open Graph -->
+    <meta property="og:title" content="🎙️ Biblioteca de Audio | Jaz & Gabo" />
+    <meta property="og:description" content="Sube y comparte tus ideas, música o episodios de audio fácilmente." />
+    <meta property="og:image" content="https://pbs.twimg.com/profile_images/1194065257712492544/3bt23z3Q_200x200.jpg" />
+    <meta property="og:url" content="https://mp3.gabinoramirez.com/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Jaz & Gabo Audio Hub" />
+    <meta property="og:locale" content="es_ES" />
+    
+    <!-- Facebook Article tags (si FB se usa) -->
+    <meta property="fb:app_id" content="1234567890" />
+    <meta property="article:published_time" content="2023-10-01T12:00:00Z" />
+    <meta property="article:modified_time"  content="2025-04-28T12:00:00Z" />
+    <meta property="article:author"  content="Gabino Ramírez" />
+    <meta property="article:section" content="Audio, Música, Podcast" />
+    <meta property="article:tag" content="audio, música, podcast, upload, compartir, Jazmín, Gabino" />
+    <meta property="article:publisher" content="https://www.facebook.com/RGabinoRamirez" />
+  
+    <!-- Main CSS -->
+    <link href="./styles/index.css" rel="stylesheet" />
+    
+    <!-- JS bundles -->
+    <script src="./js/api.js" defer></script>
+    <script src="./js/script.js" defer></script>
+  </head>
+  <body>
+    <div class="theme-switcher">
+      <button data-theme="dark">🌙 Oscuro</button>
+      <button data-theme="light">☀️ Claro</button>
+      <button data-theme="metal">🤘 Rosa Metal</button>
+    </div>
+
+    <div class="container">
+      <h1>🎧 Jaz & Gabo Media Hub</h1>
+
+      <!-- Controles de búsqueda y orden -->
+
+      <!-- Drag & Drop -->
+      <!-- Contenedor para mensajes -->
+      <div id="uploadMessage" style="margin-bottom: 20px"></div>
+
+      <!-- Formulario de Drag & Drop -->
+      <form
+        class="dropzone"
+        id="uploadForm"
+        method="post"
+        enctype="multipart/form-data"
+        action="./api/upload.php">
+        <p>Arrastra los archivos aquí o haz clic para seleccionar</p>
+        <input type="file" name="archivo[]" id="fileInput" multiple />
+      </form>
+
+      <!-- Player principal (audio o video) -->
+      <div id="playerContainer" class="player-container"></div>
+
+      <div class="controls">
+        <select id="orderSelect">
+          <option value="date" selected>Subido recientemente</option>
+          <option value="name">Nombre (A‑Z)</option>
+        </select>
+        <input type="text" id="searchInput" placeholder="Buscar archivos..." />
+      </div>
+
+      <!-- Lista de archivos -->
+      <ul id="fileList"></ul>
+      <div id="pagination" class="pagination"></div>
+    </div>
+
+    <!-- Lightbox para imágenes -->
+    <div id="lightbox" class="lightbox hidden">
+      <img id="lightboxImg" src="" alt="Vista previa" />
+      <button id="closeLightbox">✕</button>
+    </div>
+
+    <footer>
+      Hecho con ❤️ para Jazmín por Gabino — <span id="year"></span>
+    </footer>
+
+    <!-- Spinner de carga -->
+    <div
+      id="uploadSpinner"
+      style="
+        display: none !important;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.7);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 2000;
+      ">
+      <div class="spinner"></div>
+    </div>
+
+    <audio id="riffPlayer" src="./assets/riff.mp3" preload="auto"></audio>
+  </body>
+</html>
+

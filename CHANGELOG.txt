@@ -1,0 +1,38 @@
+
+CHANGELOG - Media Hub Upgrade
+=============================
+
+Date: 2025-04-28 22:32:59
+
+Major Features Added
+-------------------
+1. Theme support
+   * Dark (default), Light, and Rosa Metalero options.
+   * Theme remembered in localStorage.
+2. Persistent UI state
+   * Last search term and ordering preference are stored in localStorage and restored.
+3. Ordering options extended
+   * Added Name (Z‑A) and Date (antiguo primero).
+4. Skeleton loader
+   * Detailed skeleton shown while files are loading or order changes.
+5. Gallery & Video player
+   * Images open in a lightbox.
+   * Main player dynamically switches between <audio> and <video>.
+
+Files Modified / Added
+----------------------
+* index.html – cleaned duplicates, added theme switcher, controls container, lightbox.
+* styles/index.css – CSS variables + colour themes, lightbox styles, theme‑switcher UI.
+* js/api.js – rewritten to include state persistence, theme handling, lightbox, adaptive player.
+* api/v1.php – added `order=name_desc` and `order=date_asc`.
+* (unchanged) js/script.js – left for any custom extras you may have.
+* CHANGELOG.txt – this file.
+
+How to use
+----------
+* Choose theme with the buttons in top‑right corner. Stored automatically.
+* Search or change order; state is saved automatically.
+* Click an image to open in lightbox; click outside or ✕ to close.
+* Click an audio or video to load it in the main player.
+
+Enjoy!

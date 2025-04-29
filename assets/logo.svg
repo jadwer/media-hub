@@ -1,0 +1,9 @@
+<!--  assets/logo.svg  -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 140" fill="none" stroke="currentColor" stroke-width="10">
+  <!-- auriculares -->
+  <path d="M30 80a40 40 0 0 1 80 0"></path>
+  <rect x="20" y="80" width="25" height="40" rx="8"></rect>
+  <rect x="95" y="80" width="25" height="40" rx="8"></rect>
+  <!-- rayo musical -->
+  <polyline points="70 65 60 90 80 90 70 115"></polyline>
+</svg>
