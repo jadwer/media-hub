@@ -1,7 +1,6 @@
 
 // === CONFIG ===
-const isLocal = true;
-const API_URL = isLocal ? 'http://localhost:8000/api/v1.php' : './api/v1.php';
+const API_URL = `${window.location.origin}/api/v1.php`;
 const FILES_PER_PAGE = 20;
 
 
