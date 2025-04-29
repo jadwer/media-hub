@@ -1,4 +1,4 @@
-console.log("carga script.js")// Highlight al arrastrar sobre la zona de carga
+// Highlight al arrastrar sobre la zona de carga
 const dropzone = document.querySelector(".dropzone");
 const input = dropzone.querySelector("input");
 
@@ -33,7 +33,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const uploadForm = document.getElementById('uploadForm');
   const fileInput = document.getElementById('fileInput');
   const messageDiv = document.getElementById('uploadMessage');
-  const spinnerOverlay = document.getElementById('uploadSpinner');
 
   uploadForm.addEventListener('change', async (event) => {
     event.preventDefault();
@@ -42,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const formData = new FormData();
     Array.from(fileInput.files).forEach(file => formData.append('archivo[]', file));
 
-    playRiff();
+    playRiff(); // Reproducir riff al iniciar la carga
     showSpinner(); // Mostrar spinner dependiendo del tema
 
     try {
@@ -93,15 +92,10 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function playRiff() {
-  const riff   = document.getElementById('riffPlayer');
-  const dz     = document.querySelector('.dropzone');
-  
-  ['mousedown', 'dragenter'].forEach(evt =>
-    dz.addEventListener(evt, () => {
-      if (document.body.classList.contains('metal-mode')) {
-        riff.currentTime = 0;
-        riff.volume = 0.6;
-        riff.play().catch(()=>{});   // silencioso si el user agent lo bloquea
-      }
-    }, { once:false })
-  );}
+  const riff = document.getElementById('riffPlayer');
+  if (riff) {
+    riff.currentTime = 0;    // desde el inicio
+    riff.volume = 0.5;       // volumen moderado
+    riff.play().catch(() => {/*silenciar errores de autoplay*/});
+  }
+}
