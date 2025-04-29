@@ -28,26 +28,28 @@ function playAudio(fileUrl) {
   player.play();
 }
 
+document.addEventListener("DOMContentLoaded", () => {
+  const uploadForm = document.getElementById("uploadForm");
+  const fileInput = document.getElementById("fileInput");
+  const messageDiv = document.getElementById("uploadMessage");
 
-document.addEventListener('DOMContentLoaded', () => {
-  const uploadForm = document.getElementById('uploadForm');
-  const fileInput = document.getElementById('fileInput');
-  const messageDiv = document.getElementById('uploadMessage');
-
-  uploadForm.addEventListener('change', async (event) => {
+  playRiff(); // Reproducir riff al iniciar la carga
+  
+  uploadForm.addEventListener("change", async (event) => {
     event.preventDefault();
     if (!fileInput.files.length) return;
 
     const formData = new FormData();
-    Array.from(fileInput.files).forEach(file => formData.append('archivo[]', file));
+    Array.from(fileInput.files).forEach((file) =>
+      formData.append("archivo[]", file)
+    );
 
-    playRiff(); // Reproducir riff al iniciar la carga
     showSpinner(); // Mostrar spinner dependiendo del tema
 
     try {
-      const response = await fetch('./api/upload.php', {
-        method: 'POST',
-        body: formData
+      const response = await fetch("./api/upload.php", {
+        method: "POST",
+        body: formData,
       });
 
       hideSpinner(); // Ocultar spinner
@@ -56,24 +58,26 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href = response.url;
       } else {
         const text = await response.text();
-        showMessage('success', '¡Archivos subidos correctamente!');
-        fileInput.value = ''; 
+        showMessage("success", "¡Archivos subidos correctamente!");
+        fileInput.value = "";
       }
     } catch (error) {
       hideSpinner();
-      showMessage('error', 'Error al subir los archivos.');
-      console.error('Error al subir:', error);
+      showMessage("error", "Error al subir los archivos.");
+      console.error("Error al subir:", error);
     }
   });
 
   function showMessage(type, text) {
-    messageDiv.innerHTML = `<div style="padding:10px; border-radius:8px; background:${type==='success' ? '#28a745' : '#dc3545'}; color:white;">${text}</div>`;
+    messageDiv.innerHTML = `<div style="padding:10px; border-radius:8px; background:${
+      type === "success" ? "#28a745" : "#dc3545"
+    }; color:white;">${text}</div>`;
   }
 
   function showSpinner() {
-    const spinner = document.getElementById('uploadSpinner');
+    const spinner = document.getElementById("uploadSpinner");
     const body = document.body;
-    if (body.classList.contains('metal-mode')) {
+    if (body.classList.contains("metal-mode")) {
       spinner.innerHTML = `
         <div class="wave-spinner">
           <div></div><div></div><div></div><div></div><div></div>
@@ -82,20 +86,28 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
       spinner.innerHTML = `<div class="spinner"></div>`;
     }
-    spinner.style.display = 'flex';
+    spinner.style.display = "flex";
   }
 
   function hideSpinner() {
-    const spinner = document.getElementById('uploadSpinner');
-    spinner.style.display = 'none';
+    const spinner = document.getElementById("uploadSpinner");
+    spinner.style.display = "none";
   }
 });
 
 function playRiff() {
-  const riff = document.getElementById('riffPlayer');
-  if (riff) {
-    riff.currentTime = 0;    // desde el inicio
-    riff.volume = 0.5;       // volumen moderado
-    riff.play().catch(() => {/*silenciar errores de autoplay*/});
-  }
+  const riff = document.getElementById("riffPlayer"); // <audio id="riffPlayer" ...>
+  const dz = document.querySelector(".dropzone"); // el área drag-and-drop
+
+  ["mousedown", "dragenter"].forEach((evt) =>
+    dz.addEventListener(evt, () => {
+      if (document.body.classList.contains("metal-mode")) {
+        riff.currentTime = 0;
+        riff.volume = 0.6;
+        riff.play().catch(() => {
+          /* Autoplay bloqueado, se ignora */
+        });
+      }
+    })
+  );
 }
