@@ -1,6 +1,5 @@
 // === CONFIG ===
 const API_URL = `${window.location.origin}/api/v1.php`;
-const UPLOAD_URL = `${window.location.origin}/api/upload.php`;
 const FILES_PER_PAGE = 20;
 
 
