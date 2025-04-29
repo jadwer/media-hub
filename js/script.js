@@ -18,7 +18,7 @@ dropzone.addEventListener("drop", (e) => {
   e.preventDefault();
   dropzone.classList.remove("hover");
   input.files = e.dataTransfer.files;
-  input.dispatchEvent(new Event('change', { bubbles:true }));
+  input.dispatchEvent(new Event("change", { bubbles: true }));
 });
 
 function playAudio(fileUrl) {
@@ -29,20 +29,19 @@ function playAudio(fileUrl) {
   player.play();
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
   const fileInput = document.getElementById("fileInput");
   const messageDiv = document.getElementById("uploadMessage");
 
-  
-  fileInput.addEventListener('change', async (event) => {
+  fileInput.addEventListener("change", async (event) => {
     event.preventDefault();
     if (!fileInput.files.length) return;
-    
+
     const formData = new FormData();
     Array.from(fileInput.files).forEach((file) =>
       formData.append("archivo[]", file)
-  );
-  
+    );
+
     playRiff(); // Reproducir riff al iniciar la carga
     showSpinner(); // Mostrar spinner dependiendo del tema
 
@@ -75,7 +74,10 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function showSpinner() {
-    console.log("Shown spinner... Theme: ", document.body.classList.contains("metal-mode"));
+    console.log(
+      "Shown spinner... Theme: ",
+      document.body.classList.contains("metal-mode")
+    );
     const spinner = document.getElementById("uploadSpinner");
     const body = document.body;
     if (body.classList.contains("metal-mode")) {
@@ -100,15 +102,11 @@ function playRiff() {
   const riff = document.getElementById("riffPlayer"); // <audio id="riffPlayer" ...>
   const dz = document.querySelector(".dropzone"); // el área drag-and-drop
 
-  ["mousedown", "dragenter"].forEach((evt) =>
-    dz.addEventListener(evt, () => {
-      if (document.body.classList.contains("metal-mode")) {
-        riff.currentTime = 0;
-        riff.volume = 0.6;
-        riff.play().catch(() => {
-          /* Autoplay bloqueado, se ignora */
-        });
-      }
-    })
-  );
+  if (document.body.classList.contains("metal-mode")) {
+    riff.currentTime = 0;
+    riff.volume = 0.6;
+    riff.play().catch(() => {
+      /* Autoplay bloqueado, se ignora */
+    });
+  }
 }
