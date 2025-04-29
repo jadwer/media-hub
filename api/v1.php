@@ -10,7 +10,7 @@ header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
 // Cambia manualmente según tu entorno
 $isLocal = true; // true = desarrollo (localhost), false = producción (servidor)
 
-$folder = $isLocal ? '../files' : __DIR__ . '/../../files';
+$folder = $isLocal ? '../files' : __DIR__ . '/../files';
 $webPath = '/files';
 
 // === EXTENSIONES PERMITIDAS ===
