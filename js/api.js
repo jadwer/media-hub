@@ -28,6 +28,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
   uploadForm.addEventListener('change', async (event) => {
     event.preventDefault();
     if (!fileInput.files.length) return;
+    console.log("trying to play the riff...");
     playRiff();
 
     const formData = new FormData();
