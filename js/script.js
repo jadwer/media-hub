@@ -79,7 +79,6 @@ document.addEventListener('DOMContentLoaded', () => {
           <div></div><div></div><div></div><div></div><div></div>
         </div>
       `;
-      playRiff(); // Reproducir riff de guitarra
     } else {
       spinner.innerHTML = `<div class="spinner"></div>`;
     }
@@ -92,11 +91,3 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-function playRiff() {
-  const riff = document.getElementById('riffPlayer');
-  if (riff) {
-    riff.currentTime = 0;    // desde el inicio
-    riff.volume = 0.5;       // volumen moderado
-    riff.play().catch(() => {/*silenciar errores de autoplay*/});
-  }
-}

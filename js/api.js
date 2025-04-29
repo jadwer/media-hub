@@ -28,6 +28,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
   uploadForm.addEventListener('change', async (event) => {
     event.preventDefault();
     if (!fileInput.files.length) return;
+    playRiff();
 
     const formData = new FormData();
     Array.from(fileInput.files).forEach(file => formData.append('archivo[]', file));
@@ -170,4 +171,14 @@ function addLightboxListeners(){
   const lb=document.getElementById('lightbox');
   document.getElementById('closeLightbox').onclick=()=>lb.classList.add('hidden');
   lb.onclick=e=>{if(e.target===lb)lb.classList.add('hidden');}
+}
+
+// === PLAY RIFF ===
+function playRiff() {
+  const riff = document.getElementById('riffPlayer');
+  if (riff) {
+    riff.currentTime = 0;    // desde el inicio
+    riff.volume = 0.5;       // volumen moderado
+    riff.play().catch(() => {/*silenciar errores de autoplay*/});
+  }
 }
