@@ -5,18 +5,34 @@ session_start();
 $uploadDir = __DIR__ . '/../files/';
 $maxSizeMB = 20;
 $allowedExtensions = [
-    'mp3', 'wav', 'ogg',
-    'mp4', 'mov', 'webm',
-    'jpg', 'jpeg', 'png', 'gif', 'webp'
+    'mp3',
+    'wav',
+    'ogg',
+    'mp4',
+    'mov',
+    'webm',
+    'jpg',
+    'jpeg',
+    'png',
+    'gif',
+    'webp'
 ];
 $allowedMimeTypes = [
-    'audio/mpeg', 'audio/wav', 'audio/ogg',
-    'video/mp4', 'video/quicktime', 'video/webm',
-    'image/jpeg', 'image/png', 'image/gif', 'image/webp'
+    'audio/mpeg',
+    'audio/wav',
+    'audio/ogg',
+    'video/mp4',
+    'video/quicktime',
+    'video/webm',
+    'image/jpeg',
+    'image/png',
+    'image/gif',
+    'image/webp'
 ];
 
 // Función para generar un nombre seguro
-function generateSafeName($extension) {
+function generateSafeName($extension)
+{
     return time() . '_' . bin2hex(random_bytes(5)) . '.' . $extension;
 }
 
@@ -54,7 +70,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['archivo'])) {
         }
 
         // Generar nombre seguro
-        $safeName = generateSafeName($extension);
+
+        $clean = preg_replace('~[^a-zA-Z0-9 _.-]~', '', pathinfo($originalName, PATHINFO_FILENAME));
+        $clean = preg_replace('~\\s+~', '_', $clean);       // espacios → guión bajo
+        $clean = trim($clean, '._');                        // limpia bordes
+        // si existe duplicado, agrega -1, -2…
+        $counter = 0;
+        $safeName = $clean . '.' . $extension;
+        while (file_exists($uploadDir . $safeName)) {
+            $counter++;
+            $safeName = $clean . '-' . $counter . '.' . $extension;
+        }
+
         $targetPath = $uploadDir . $safeName;
 
         // Mover el archivo

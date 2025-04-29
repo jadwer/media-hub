@@ -42,6 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const formData = new FormData();
     Array.from(fileInput.files).forEach(file => formData.append('archivo[]', file));
 
+    playRiff();
     showSpinner(); // Mostrar spinner dependiendo del tema
 
     try {
@@ -79,6 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <div></div><div></div><div></div><div></div><div></div>
         </div>
       `;
+      playRiff(); // Reproducir riff de guitarra
     } else {
       spinner.innerHTML = `<div class="spinner"></div>`;
     }
@@ -91,3 +93,12 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
+function playRiff() {
+  const riff = document.getElementById('riffPlayer');
+  if (riff) {
+    riff.muted=false; // asegurarse de que no esté silenciado
+    riff.currentTime = 0;    // desde el inicio
+    riff.volume = 0.5;       // volumen moderado
+    riff.play().catch(() => {/*silenciar errores de autoplay*/});
+  }
+}
