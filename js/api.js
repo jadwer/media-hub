@@ -1,4 +1,4 @@
-
+console.log("carga api.js")
 // === CONFIG ===
 const API_URL = `${window.location.origin}/api/v1.php`;
 const FILES_PER_PAGE = 20;

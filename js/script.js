@@ -1,4 +1,4 @@
-// Highlight al arrastrar sobre la zona de carga
+console.log("carga script.js")// Highlight al arrastrar sobre la zona de carga
 const dropzone = document.querySelector(".dropzone");
 const input = dropzone.querySelector("input");
 
