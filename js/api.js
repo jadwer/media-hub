@@ -61,8 +61,17 @@ async function fetchFiles(order=currentOrder){
   currentOrder=order;
   localStorage.setItem('order',order);
   showSkeletonLoader();
+
   const res = await fetch(`${API_URL}?order=${order}`);
-  files = await res.json();
+  const data     = await res.json();
+
+  if (!Array.isArray(data)) {             // el backend devolvió un objeto de error
+    showMessage('error', data.error || 'Error inesperado del servidor');
+    hideSpinner();                        // quita skeleton / spinner si sigue activo
+    return;                               // detén la ejecución
+  }
+
+  files = data;
   applyFilters();
 }
 
