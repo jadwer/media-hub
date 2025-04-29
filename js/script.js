@@ -75,6 +75,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function showSpinner() {
+    console.log("Shown spinner... Theme: ", document.body.classList.contains("metal-mode"));
     const spinner = document.getElementById("uploadSpinner");
     const body = document.body;
     if (body.classList.contains("metal-mode")) {
