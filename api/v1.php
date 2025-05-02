@@ -1,6 +1,5 @@
 <?php
 // v1.php
-
 // === HEADERS PARA API ===
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
@@ -21,7 +20,8 @@ $allowed_extensions = [
 ];
 
 // === FUNCIONES ===
-function getFileType($ext, $allowed_extensions) {
+function getFileType($ext, $allowed_extensions)
+{
     foreach ($allowed_extensions as $type => $exts) {
         if (in_array($ext, $exts)) {
             return $type;
@@ -62,11 +62,11 @@ foreach ($files as $file) {
 $order = isset($_GET['order']) ? strtolower($_GET['order']) : 'date';
 
 if ($order === 'name') {
-    } elseif ($order === 'name_desc') {
-        usort($list, fn($a, $b) => strcmp($b['name'], $a['name']));
-    } elseif ($order === 'date_asc') {
-        usort($list, fn($a, $b) => $a['modified'] - $b['modified']);
     usort($list, fn($a, $b) => strcmp($a['name'], $b['name']));
+} elseif ($order === 'name_desc') {
+    usort($list, fn($a, $b) => strcmp($b['name'], $a['name']));
+} elseif ($order === 'date_asc') {
+    usort($list, fn($a, $b) => $a['modified'] - $b['modified']);
 } else {
     usort($list, fn($a, $b) => $b['modified'] - $a['modified']);
 }

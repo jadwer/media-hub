@@ -68,60 +68,43 @@
       content="https://www.facebook.com/RGabinoRamirez" />
 
     <!-- Main CSS -->
-    <link href="./styles/index.css" rel="stylesheet" />
+    <link id="themeStylesheet" rel="stylesheet" href="styles/themes/metal.css" />
+    <link rel="stylesheet" href="styles/index.css" />
 
-    <!-- JS bundles -->
-    <script src="./js/api.js" defer></script>
-    <script src="./js/script.js" defer></script>
+    <!-- JS app -->
+    <script type="module" src="js/main.js"></script>
+
   </head>
   <body>
-    <div class="theme-switcher">
-      <button data-theme="dark">🌙 Oscuro</button>
-      <button data-theme="light">☀️ Claro</button>
-      <button data-theme="metal">🤘 Rosa Metal</button>
-    </div>
 
-    <div class="container">
+    <header>
       <h1>🎧 Jaz & Gabo Media Hub</h1>
-
-      <!-- Controles de búsqueda y orden -->
-
-      <!-- Drag & Drop -->
-      <!-- Contenedor para mensajes -->
-      <div id="uploadMessage" style="margin-bottom: 20px"></div>
-
-      <!-- Formulario de Drag & Drop -->
-      <form
-        class="dropzone"
-        id="uploadForm"
-        method="post"
-        enctype="multipart/form-data"
-        action="./api/upload.php">
-        <p>Arrastra los archivos aquí o haz clic para seleccionar</p>
-        <input type="file" name="archivo[]" id="fileInput" multiple />
-      </form>
-
-      <!-- Player principal (audio o video) -->
-      <div id="playerContainer" class="player-container"></div>
-
-      <div class="controls">
-        <select id="orderSelect">
-          <option value="date" selected>Subido recientemente</option>
-          <option value="name">Nombre (A‑Z)</option>
-        </select>
-        <input type="text" id="searchInput" placeholder="Buscar archivos..." />
+      <button id="themeToggle" title="Cambiar tema">🌓</button>
+    </header>
+        
+    <!-- Drag & Drop -->
+    <section class="dropzone">
+      <input type="file" hidden />
+      <p>Arrastra aquí tu archivo o haz clic para seleccionarlo</p>
+    </section>
+    
+    <section id="preview" class="preview-container"></section>
+    
+    <!-- Controles de búsqueda y orden -->
+    <section class="controls">
+      <input type="text" id="searchInput" placeholder="Buscar por nombre..." />
+      <div>
+        <button id="prevPage">◀</button>
+        <span id="pageInfo"></span>
+        <button id="nextPage">▶</button>
       </div>
+    </section>
 
-      <!-- Lista de archivos -->
-      <ul id="fileList"></ul>
-      <div id="pagination" class="pagination"></div>
-    </div>
-
-    <!-- Lightbox para imágenes -->
-    <div id="lightbox" class="lightbox hidden">
-      <img id="lightboxImg" src="" alt="Vista previa" />
-      <button id="closeLightbox">✕</button>
-    </div>
+    <!-- Contenedor de archivos y reproductor -->
+    <main>
+      <div id="fileList" class="file-list"></div>
+      <div id="playerContainer" class="player-zone"></div>
+    </main>
 
     <footer>
       Hecho con ❤️ para Jazmín por Gabino — <span id="year"></span>
@@ -129,20 +112,9 @@
 
     <!-- Spinner de carga -->
 
-    <div
-      id="uploadSpinner"
-      style="
-        display: none;
-        position: fixed;
-        inset: 0;
-        background: rgba(0, 0, 0, 0.7);
-        justify-content: center;
-        align-items: center;
-        z-index: 2000;
-      ">
-      >
-    </div>
+    <div class="spinner" style="display: none;">Cargando...</div>
     <audio id="riffPlayer" src="./assets/riff.mp3" preload="auto"></audio>
+
   </body>
 </html>
 

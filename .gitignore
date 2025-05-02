@@ -1,3 +1,39 @@
+# 🛑 Archivos multimedia grandes (excepto riff)
 *.mp3
-!/assets/riff.mp3
+!assets/riff.mp3
+*.wav
+*.mp4
+*.mov
+*.webm
 *.zip
+
+# 📂 Directorios de contenido dinámico
+/files/
+uploads/
+preview/
+
+# 🧪 Archivos temporales y de entorno
+.DS_Store
+Thumbs.db
+.env
+*.log
+
+# 💻 Configuración local o de editor
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# 🚫 Archivos de sistema
+*.bak
+*.tmp
+*.swp
+
+# 🐘 Ignorar composer si no lo usas (seguridad)
+composer.lock
+vendor/
+
+# 📦 Node (por si en el futuro incorporas herramientas JS)
+node_modules/
+package-lock.json
+dist/
