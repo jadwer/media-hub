@@ -8,7 +8,8 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 // Configuración
-$uploadDir = __DIR__ . '/../files/';
+$uploadDir = __DIR__ . '/../files/'; // Directorio de carga
+
 $maxSizeMB = 20;
 $allowedExtensions = ['mp3','wav','ogg','mp4','mov','webm','jpg','jpeg','png','gif','webp'];
 $allowedMimeTypes = [
@@ -94,6 +95,10 @@ foreach ($files as $file) {
 echo json_encode([
     'success' => $successCount > 0,
     'uploaded' => $successCount,
-    'errors' => $errors
+    'errors' => $errors,
+    'meta' => [
+        'uploadDir' => $uploadDir,
+        'files' => [$files],
+        ] 
 ]);
 exit;

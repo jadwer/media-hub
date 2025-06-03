@@ -4,7 +4,7 @@ return [
 
     'paths' => [
         'local' => [
-            'folder'  => realpath(__DIR__ . '/../files'),
+            'folder'  => realpath(__DIR__ . '/files'),
             'webPath' => '/files',
         ],
         'production' => [
@@ -13,3 +13,10 @@ return [
         ],
     ]
 ];
+
+function debug_log($object = null, $label = null)
+{
+    $message = json_encode($object, JSON_PRETTY_PRINT);
+    $label = "PHP: " . ($label ? " ($label): " : ': ');
+    echo "<script>console.log(\"$label\", $message);</script>";
+}

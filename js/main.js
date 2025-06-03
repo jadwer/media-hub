@@ -22,11 +22,12 @@ async function loadFiles() {
   showSpinner();
   try {
     files = await getFiles();
-    filteredFiles = files;
+    filteredFiles = files.files;
     currentPage = 1;
     renderFiles(filteredFiles, currentPage);
   } catch (error) {
     alert("Error al cargar archivos.");
+    console.log(error);
   } finally {
     hideSpinner();
   }

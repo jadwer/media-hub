@@ -23,6 +23,7 @@ export async function getFiles({ type = 'all', page = 1, perPage = 10, order = '
 
 export async function uploadFile(formData) {
   try {
+    console.log(formData);
     const response = await fetch('/api/upload.php', {
       method: 'POST',
       body: formData

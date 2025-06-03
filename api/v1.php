@@ -5,7 +5,7 @@ header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
 
 // === CONFIGURACIÓN ===
 require_once __DIR__ . '/utils.php';
-$config = require __DIR__ . '/config.php';
+$config = require __DIR__ . '/../config.php';
 
 $env = $config['env'];
 $folder = $config['paths'][$env]['folder'];

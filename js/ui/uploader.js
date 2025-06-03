@@ -46,8 +46,9 @@ export function setupUploader(onUploadComplete) {
       } else {
         alert('❌ Error: ' + (response.errors || []).join('\n'));
       }
-    }).catch(() => {
+    }).catch((error) => {
       alert('Error al conectar con el servidor.');
+      console.log(error)
     });
   }
 
