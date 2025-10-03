@@ -189,9 +189,16 @@
 - [ ] Estadísticas de descargas
 
 ### 5.4 PWA y offline
-- [ ] Service Worker para caché
-- [ ] Modo offline básico
-- [ ] Instalable como app
+- [x] Service Worker para caché
+- [x] Modo offline básico
+- [x] Instalable como app
+- [x] Manifest.json configurado
+- [x] Iconos PWA (SVG gradiente)
+- [x] Cache de assets estáticos
+- [x] Cache de archivos multimedia reproducidos
+- [x] Estrategia Network First para APIs
+- [x] Estrategia Cache First para media
+- [x] Auto-update con confirmación
 - [ ] Notificaciones push (opcional)
 
 ### 5.5 Experiencia multimedia
@@ -277,8 +284,11 @@
   - ✅ 4.1: Autenticación completa con login/logout
   - ✅ 4.2: CSRF tokens, rate limiting, headers de seguridad
   - ✅ 4.3: Variables de entorno (.env) y logging de errores
+  - ✅ **BONUS**: PWA instalable con Service Worker y modo offline
   - 🎯 **PENDIENTE**: Script deployment, backups automáticos, monitoreo
-- **Fase 5:** ⏳ Pendiente (Features avanzadas)
+- **Fase 5:** ✅ **PWA COMPLETADA** - App instalable con modo offline
+  - ✅ 5.4: Service Worker, cache, instalable, auto-update
+  - ⏳ Resto de features avanzadas pendientes
 
 ---
 

@@ -69,8 +69,49 @@ require_once __DIR__ . '/api/security.php';
     <link id="themeStylesheet" rel="stylesheet" href="styles/themes/metal.css" />
     <link rel="stylesheet" href="styles/index.css" />
 
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Media Hub" />
+    <link rel="apple-touch-icon" href="/assets/icon-192.svg" />
+
     <!-- JS app -->
     <script type="module" src="js/main.js"></script>
+
+    <!-- Service Worker Registration -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .then((registration) => {
+              console.log('✅ Service Worker registered:', registration.scope);
+
+              // Check for updates
+              registration.addEventListener('updatefound', () => {
+                const newWorker = registration.installing;
+                newWorker.addEventListener('statechange', () => {
+                  if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                    // Nueva versión disponible
+                    if (confirm('Nueva versión disponible. ¿Recargar para actualizar?')) {
+                      newWorker.postMessage({ type: 'SKIP_WAITING' });
+                      window.location.reload();
+                    }
+                  }
+                });
+              });
+            })
+            .catch((error) => {
+              console.error('❌ Service Worker registration failed:', error);
+            });
+
+          // Recargar cuando el SW tome control
+          navigator.serviceWorker.addEventListener('controllerchange', () => {
+            window.location.reload();
+          });
+        });
+      }
+    </script>
 
   </head>
   <body>
