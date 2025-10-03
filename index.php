@@ -1,3 +1,7 @@
+<?php
+// Set security headers
+require_once __DIR__ . '/api/security.php';
+?>
 <!DOCTYPE html>
 <html lang="es">
   <head>
@@ -80,7 +84,10 @@
     <!-- Header -->
     <header class="app-header">
       <h1>🎧 Media Hub</h1>
-      <button id="themeToggle" title="Cambiar tema">🌓</button>
+      <div class="header-actions">
+        <button id="themeToggle" title="Cambiar tema">🌓</button>
+        <button id="logoutBtn" class="logout-btn" title="Cerrar sesión">🚪</button>
+      </div>
     </header>
 
     <!-- Main Layout: Sidebar + Content -->

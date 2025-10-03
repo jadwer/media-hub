@@ -1096,7 +1096,14 @@
     margin:0;
   }
 
-  .app-header #themeToggle{
+  .header-actions{
+    display:flex;
+    gap:10px;
+    align-items:center;
+  }
+
+  .app-header #themeToggle,
+  .app-header .logout-btn{
     background:var(--accent);
     color:var(--bg);
     border:none;
@@ -1107,7 +1114,8 @@
     transition:opacity 0.3s;
   }
 
-  .app-header #themeToggle:hover{
+  .app-header #themeToggle:hover,
+  .app-header .logout-btn:hover{
     opacity:0.8;
   }
 

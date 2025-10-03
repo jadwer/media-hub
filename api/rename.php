@@ -4,6 +4,9 @@
  * Validates file names and prevents path traversal attacks
  */
 
+// Protect endpoint with session validation
+require_once __DIR__ . '/session.php';
+
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST, OPTIONS');

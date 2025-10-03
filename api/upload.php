@@ -1,4 +1,11 @@
 <?php
+// Protect endpoint with session validation
+require_once __DIR__ . '/session.php';
+require_once __DIR__ . '/rateLimit.php';
+
+// Rate limiting: Max uploads per minute
+rateLimitUpload();
+
 header('Content-Type: application/json');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {

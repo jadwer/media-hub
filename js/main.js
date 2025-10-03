@@ -4,6 +4,7 @@
  * @author Gabino Ramírez
  */
 
+import { checkAuth, logout } from './utils/auth.js';
 import { uploadFile, getFiles, deleteFile, renameFile } from './api/index.js';
 import { switchTheme, toggleTheme, loadTheme } from './ui/themeManager.js';
 import { playMedia, downloadFile } from './ui/player.js';
@@ -402,6 +403,14 @@ function initEvents() {
 
   document.getElementById('themeToggle').addEventListener('click', toggleTheme);
 
+  // Logout button
+  document.getElementById('logoutBtn').addEventListener('click', async () => {
+    const confirmed = confirm('¿Estás seguro de que quieres cerrar sesión?');
+    if (confirmed) {
+      await logout();
+    }
+  });
+
   // View mode buttons
   document.getElementById('viewList').addEventListener('click', () => {
     changeViewMode('list');
@@ -689,6 +698,12 @@ function showRenameModal(oldFilename) {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
+  // Check authentication first
+  const isAuthenticated = await checkAuth();
+  if (!isAuthenticated) {
+    return; // Will redirect to login
+  }
+
   initEvents();
   await loadFiles();
   await initPlaylistManager(currentFiles);
