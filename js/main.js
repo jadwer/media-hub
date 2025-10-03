@@ -697,6 +697,117 @@ function showRenameModal(oldFilename) {
   });
 }
 
+/**
+ * Load storage statistics
+ */
+async function loadStorageStats() {
+  const statsContainer = document.getElementById('storageStats');
+  if (!statsContainer) return;
+
+  try {
+    const response = await authFetch('/api/storage.php');
+    const data = await response.json();
+
+    if (!data.success) {
+      statsContainer.innerHTML = '<p style="color: var(--fg); opacity: 0.7;">Error al cargar estadísticas</p>';
+      return;
+    }
+
+    const { disk, app, warnings, status } = data;
+
+    // Determine bar fill class
+    let barClass = '';
+    if (status === 'critical') barClass = 'critical';
+    else if (status === 'warning') barClass = 'warning';
+
+    let html = `
+      <!-- Disk Usage Bar -->
+      <div style="margin-bottom: 25px;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+          <span style="color: var(--fg); font-weight: 500;">Uso de Disco</span>
+          <span style="color: var(--accent); font-weight: 600;">${disk.used_percent}%</span>
+        </div>
+        <div class="storage-bar">
+          <div class="storage-bar-fill ${barClass}" style="width: ${disk.used_percent}%"></div>
+        </div>
+        <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--fg); opacity: 0.7;">
+          <span>${disk.used_formatted} usado</span>
+          <span>${disk.free_formatted} libre de ${disk.total_formatted}</span>
+        </div>
+      </div>
+
+      <!-- Storage Cards -->
+      <div class="storage-grid">
+        <div class="storage-card">
+          <div class="storage-card-title">📁 Archivos Multimedia</div>
+          <div class="storage-card-value">${app.files.count}</div>
+          <div class="storage-card-subtitle">${app.files.size_formatted}</div>
+        </div>
+
+        <div class="storage-card">
+          <div class="storage-card-title">📋 Playlists</div>
+          <div class="storage-card-value">${app.playlists.count}</div>
+          <div class="storage-card-subtitle">${app.playlists.size_formatted}</div>
+        </div>
+
+        <div class="storage-card">
+          <div class="storage-card-title">🎵 Audio</div>
+          <div class="storage-card-value">${app.files.by_type.audio}</div>
+          <div class="storage-card-subtitle">archivos</div>
+        </div>
+
+        <div class="storage-card">
+          <div class="storage-card-title">🎬 Video</div>
+          <div class="storage-card-value">${app.files.by_type.video}</div>
+          <div class="storage-card-subtitle">archivos</div>
+        </div>
+
+        <div class="storage-card">
+          <div class="storage-card-title">🖼️ Imágenes</div>
+          <div class="storage-card-value">${app.files.by_type.image}</div>
+          <div class="storage-card-subtitle">archivos</div>
+        </div>
+
+        <div class="storage-card">
+          <div class="storage-card-title">📊 Tamaño Promedio</div>
+          <div class="storage-card-value" style="font-size: 1.3rem;">${app.files.average_size_formatted}</div>
+          <div class="storage-card-subtitle">por archivo</div>
+        </div>
+      </div>
+
+      <!-- Additional Info -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px;">
+        <div style="background: var(--card-hover); padding: 15px; border-radius: 8px;">
+          <div style="font-size: 0.9rem; opacity: 0.7; margin-bottom: 5px;">📝 Logs</div>
+          <div style="font-size: 1.1rem; font-weight: 600; color: var(--accent);">${app.logs.size_formatted}</div>
+        </div>
+        <div style="background: var(--card-hover); padding: 15px; border-radius: 8px;">
+          <div style="font-size: 0.9rem; opacity: 0.7; margin-bottom: 5px;">💾 Backups</div>
+          <div style="font-size: 1.1rem; font-weight: 600; color: var(--accent);">${app.backups.size_formatted}</div>
+        </div>
+      </div>
+    `;
+
+    // Add warnings if any
+    if (warnings && warnings.length > 0) {
+      html += `
+        <div class="storage-warnings">
+          <h4>⚠️ Advertencias</h4>
+          <ul>
+            ${warnings.map(w => `<li>${w}</li>`).join('')}
+          </ul>
+        </div>
+      `;
+    }
+
+    statsContainer.innerHTML = `<h3>📊 Estadísticas de Almacenamiento</h3>` + html;
+
+  } catch (error) {
+    console.error('Error loading storage stats:', error);
+    statsContainer.innerHTML = '<p style="color: var(--fg); opacity: 0.7;">Error al cargar estadísticas</p>';
+  }
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
   // Check authentication first
   const isAuthenticated = await checkAuth();
@@ -707,4 +818,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   initEvents();
   await loadFiles();
   await initPlaylistManager(currentFiles);
+
+  // Load storage stats when visiting manage section
+  document.querySelector('[data-section="manage"]')?.addEventListener('click', () => {
+    setTimeout(loadStorageStats, 100);
+  });
 });

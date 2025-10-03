@@ -204,6 +204,95 @@ MAX_UPLOADS_PER_MINUTE=10
 - Session check on app initialization in `main.js`
 - Logout button in header
 
+## Deployment & Production (Fase 4 completada)
+
+### Deployment Script (`deploy.sh`)
+Script automatizado para deployment seguro:
+- Verifica rama git y estado
+- Crea backup pre-deployment
+- Pull de últimos cambios
+- Instala dependencias (composer, npm)
+- Verifica sintaxis PHP
+- Limpia logs antiguos (>30 días)
+- Valida permisos de directorios
+
+**Uso:**
+```bash
+chmod +x deploy.sh
+./deploy.sh
+```
+
+### Backup System (`backup.sh`)
+Sistema de backup automático con rotación:
+- **Daily backups**: Rotación de 7 días automática
+- **Manual backups**: Sin rotación, guardado permanente
+- Incluye: files/, playlists/, .env, data/
+- Compresión tar.gz con verificación de integridad
+- Metadata de cada backup
+
+**Uso:**
+```bash
+chmod +x backup.sh
+./backup.sh daily    # Backup con rotación
+./backup.sh manual   # Backup sin rotación
+```
+
+**Configurar cron job** (ver `CRON_SETUP.md`):
+```cron
+0 2 * * * cd /path/to/audio-hub && ./backup.sh daily >> logs/backup.log 2>&1
+```
+
+### Storage Monitoring (`api/storage.php`)
+Endpoint protegido que proporciona estadísticas detalladas:
+- Uso de disco (total, usado, libre, porcentaje)
+- Estadísticas por tipo de archivo (audio, video, imagen)
+- Conteo de archivos y playlists
+- Tamaño de logs y backups
+- Alertas automáticas (>80% = warning, >90% = critical)
+- Dashboard visual en sección "Administrar"
+
+**Response example:**
+```json
+{
+  "success": true,
+  "status": "ok",
+  "disk": {
+    "used_percent": 45.5,
+    "used_formatted": "450 GB",
+    "free_formatted": "550 GB"
+  },
+  "app": {
+    "files": {
+      "count": 150,
+      "size_formatted": "2.3 GB",
+      "by_type": {
+        "audio": 80,
+        "video": 50,
+        "image": 20
+      }
+    }
+  },
+  "warnings": []
+}
+```
+
+### PWA (Progressive Web App)
+App instalable con modo offline:
+- **manifest.json**: Configuración PWA con iconos y shortcuts
+- **Service Worker** (`sw.js`): Cache inteligente
+  - Network First para APIs (datos frescos)
+  - Cache First para media y assets (velocidad)
+  - Auto-update con confirmación de usuario
+- **Instalable** en Android, iOS y Desktop
+- **Modo offline**: Assets y media reproducida funcionan sin internet
+
+**Cache strategy:**
+```
+Assets estáticos  → Cache First (CSS, JS, iconos)
+Archivos media    → Cache First (reproducidos quedan offline)
+API requests      → Network First (datos frescos, fallback a cache)
+```
+
 ## Important Notes
 
 - No build process required - uses native ES modules
@@ -211,4 +300,7 @@ MAX_UPLOADS_PER_MINUTE=10
 - Test environment uses `happy-dom` for DOM simulation with Vitest
 - **Main entry point**: `index.php` (renamed from index.html for security headers)
 - **Authentication required**: All endpoints protected except `/login.html` and `/api/auth.php`
+- **Deployment**: Use `./deploy.sh` for safe deployments
+- **Backups**: Configured with `./backup.sh daily` via cron
+- **Monitoring**: Storage dashboard in "Administrar" section
 - The project is designed for private use between two people (Jaz & Gabo)

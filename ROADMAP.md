@@ -158,12 +158,15 @@
 
 ### 4.3 Preparación para producción
 - [x] Configuración de entorno `.env`
-- [ ] Script de deployment
-- [ ] Backup automático de archivos
+- [x] Script de deployment (`deploy.sh`)
+- [x] Backup automático de archivos (`backup.sh`)
 - [x] Logging de errores
-- [ ] Monitoreo de espacio en disco
+- [x] Monitoreo de espacio en disco (`api/storage.php`)
+- [x] Dashboard de estadísticas de almacenamiento
+- [x] Rotación automática de backups (7 días)
+- [x] Instrucciones de cron jobs (`CRON_SETUP.md`)
 
-**Checkpoint 4:** ✅ **COMPLETADA (Core)** - Sistema de autenticación, seguridad y logging implementados
+**Checkpoint 4:** ✅ **COMPLETADA 100%** - Sistema completo listo para producción
 
 ---
 
@@ -280,12 +283,11 @@
   - ✅ 3.3: Gestión de uploads mejorada
   - ✅ 3.4: Renombrar archivos
   - ✅ 3.5: Rediseño UX completo (sidebar + reproductor inferior + playlists)
-- **Fase 4:** ✅ **COMPLETADA (Core)** - Sistema seguro listo para producción
+- **Fase 4:** ✅ **COMPLETADA 100%** - Sistema completo listo para producción
   - ✅ 4.1: Autenticación completa con login/logout
   - ✅ 4.2: CSRF tokens, rate limiting, headers de seguridad
-  - ✅ 4.3: Variables de entorno (.env) y logging de errores
+  - ✅ 4.3: Deployment, backups, logging y monitoreo
   - ✅ **BONUS**: PWA instalable con Service Worker y modo offline
-  - 🎯 **PENDIENTE**: Script deployment, backups automáticos, monitoreo
 - **Fase 5:** ✅ **PWA COMPLETADA** - App instalable con modo offline
   - ✅ 5.4: Service Worker, cache, instalable, auto-update
   - ⏳ Resto de features avanzadas pendientes

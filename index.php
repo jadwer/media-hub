@@ -254,6 +254,12 @@ require_once __DIR__ . '/api/security.php';
               <li>⬇ Descargar archivos</li>
             </ul>
           </div>
+
+          <!-- Storage Stats -->
+          <div class="storage-stats" id="storageStats">
+            <h3>📊 Estadísticas de Almacenamiento</h3>
+            <div class="storage-loading">Cargando estadísticas...</div>
+          </div>
         </section>
 
         <!-- Section: Playlists -->
