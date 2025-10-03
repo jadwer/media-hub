@@ -150,9 +150,65 @@ Three themes available: `light`, `dark`, `metal` (default)
 - **Preview system**: Shows different preview elements based on MIME type (img/audio/video tags)
 - **Filename sanitization**: Backend transliterates UTF-8 to ASCII, removes special chars, handles duplicates
 
+## Security & Authentication (Fase 4)
+
+### Authentication System
+- **Login page**: `/login.html` - Beautiful gradient login interface
+- **Session management**: PHP sessions with secure settings (httponly, samesite, strict mode)
+- **CSRF protection**: Tokens validated on all state-changing requests (POST/PUT/DELETE)
+- **Auto-redirect**: Unauthenticated users redirected to login automatically
+
+### API Endpoints (Auth)
+- `POST /api/auth.php` - Login with username/password
+- `DELETE /api/auth.php` - Logout
+- `GET /api/auth.php` - Check session status
+
+### Security Headers
+All pages serve security headers via `api/security.php`:
+- **CSP**: Content Security Policy to prevent XSS
+- **X-Frame-Options**: DENY (prevents clickjacking)
+- **X-Content-Type-Options**: nosniff
+- **Referrer-Policy**: strict-origin-when-cross-origin
+- **HSTS**: Enabled when using HTTPS
+- **Permissions-Policy**: Restricts browser features
+
+### Rate Limiting
+Implemented via `api/rateLimit.php`:
+- **Uploads**: Max 10 per minute (configurable via `.env`)
+- **Deletions**: Max 20 per minute
+- **API calls**: Max 100 per minute
+- Returns 429 status with `retry_after` when exceeded
+
+### Error Logging
+All errors logged to `logs/app.log` via `api/logger.php`:
+- Login/logout events
+- Failed authentication attempts
+- PHP errors and exceptions
+- Rate limit violations
+- Includes timestamp, user, IP, and context
+
+### Environment Configuration
+Settings stored in `.env` file (not committed to git):
+```bash
+APP_ENV=local
+AUTH_USERNAME=admin
+AUTH_PASSWORD=your_secure_password
+SESSION_LIFETIME=3600
+MAX_UPLOADS_PER_MINUTE=10
+```
+
+### Frontend Auth Integration
+- `js/utils/auth.js` - Authentication utilities
+- `authFetch()` wrapper automatically includes CSRF tokens
+- All API calls in `js/api/index.js` use authenticated fetch
+- Session check on app initialization in `main.js`
+- Logout button in header
+
 ## Important Notes
 
 - No build process required - uses native ES modules
-- PHP 8.0+ required for arrow function syntax in `api/v1.php`
+- PHP 8.0+ required for arrow function syntax
 - Test environment uses `happy-dom` for DOM simulation with Vitest
+- **Main entry point**: `index.php` (renamed from index.html for security headers)
+- **Authentication required**: All endpoints protected except `/login.html` and `/api/auth.php`
 - The project is designed for private use between two people (Jaz & Gabo)

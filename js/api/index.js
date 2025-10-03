@@ -3,6 +3,8 @@
  * Handles all HTTP requests to backend PHP endpoints.
  */
 
+import { authFetch } from '../utils/auth.js';
+
 const API_URL = '/api/v1.php';
 
 /**
@@ -25,7 +27,7 @@ export async function getFiles({ type = 'all', page = 1, perPage = 10, order = '
     url.searchParams.set('perPage', perPage);
     url.searchParams.set('order', order);
 
-    const response = await fetch(url);
+    const response = await authFetch(url);
     console.log(`📥 [API] GET ${url}`);
     const data = await response.json();
     return data;
@@ -45,7 +47,7 @@ export async function getFiles({ type = 'all', page = 1, perPage = 10, order = '
 export async function uploadFile(formData) {
   try {
     console.log(formData);
-    const response = await fetch('/api/upload.php', {
+    const response = await authFetch('/api/upload.php', {
       method: 'POST',
       body: formData
     });
@@ -95,7 +97,7 @@ export async function getAllTypes({ perPage = 4, order = 'date_desc' } = {}) {
  */
 export async function deleteFile(filename) {
   try {
-    const response = await fetch('/api/delete.php', {
+    const response = await authFetch('/api/delete.php', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -122,7 +124,7 @@ export async function deleteFile(filename) {
  */
 export async function renameFile(oldName, newName) {
   try {
-    const response = await fetch('/api/rename.php', {
+    const response = await authFetch('/api/rename.php', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -147,7 +149,7 @@ export async function renameFile(oldName, newName) {
  */
 export async function getPlaylists() {
   try {
-    const response = await fetch('/api/playlists.php');
+    const response = await authFetch('/api/playlists.php');
     console.log('📋 Get playlists response status:', response.status);
     const data = await response.json();
     return data;
@@ -169,7 +171,7 @@ export async function getPlaylists() {
  */
 export async function createPlaylist(playlistData) {
   try {
-    const response = await fetch('/api/playlists.php', {
+    const response = await authFetch('/api/playlists.php', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -199,7 +201,7 @@ export async function createPlaylist(playlistData) {
  */
 export async function updatePlaylist(playlistData) {
   try {
-    const response = await fetch('/api/playlists.php', {
+    const response = await authFetch('/api/playlists.php', {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
@@ -225,7 +227,7 @@ export async function updatePlaylist(playlistData) {
  */
 export async function deletePlaylist(playlistId) {
   try {
-    const response = await fetch('/api/playlists.php', {
+    const response = await authFetch('/api/playlists.php', {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json'

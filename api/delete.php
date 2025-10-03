@@ -1,4 +1,11 @@
 <?php
+// Protect endpoint with session validation
+require_once __DIR__ . '/session.php';
+require_once __DIR__ . '/rateLimit.php';
+
+// Rate limiting: Max deletes per minute
+rateLimitDelete();
+
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST, OPTIONS');
