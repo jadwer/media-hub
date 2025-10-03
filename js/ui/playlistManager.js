@@ -96,32 +96,34 @@ function createPlaylistCard(playlist) {
  * Shows create playlist modal
  */
 function showCreatePlaylistModal() {
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay';
+
   const modal = document.createElement('div');
   modal.className = 'modal-container';
   modal.innerHTML = `
-    <div class="modal">
-      <div class="modal-header">
-        <h3>Nueva Playlist</h3>
-      </div>
-      <div class="modal-body">
-        <label>Nombre:</label>
-        <input type="text" id="playlistName" placeholder="Mi Playlist" maxlength="50"
-          style="width:100%; background:var(--card-hover); color:var(--fg); border:1px solid var(--accent);
-          padding:10px; border-radius:6px; margin-bottom:15px;">
+    <div class="modal-header">
+      <h3>Nueva Playlist</h3>
+    </div>
+    <div class="modal-body">
+      <label>Nombre:</label>
+      <input type="text" id="playlistName" placeholder="Mi Playlist" maxlength="50"
+        style="width:100%; background:var(--card-hover); color:var(--fg); border:1px solid var(--accent);
+        padding:10px; border-radius:6px; margin-bottom:15px;">
 
-        <label>Descripción:</label>
-        <textarea id="playlistDescription" placeholder="Descripción opcional" maxlength="200"
-          style="width:100%; background:var(--card-hover); color:var(--fg); border:1px solid var(--accent);
-          padding:10px; border-radius:6px; resize:vertical; min-height:80px;"></textarea>
-      </div>
-      <div class="modal-footer">
-        <button class="modal-btn modal-btn-cancel" id="cancelCreate">Cancelar</button>
-        <button class="modal-btn modal-btn-confirm" id="confirmCreate">Crear</button>
-      </div>
+      <label>Descripción:</label>
+      <textarea id="playlistDescription" placeholder="Descripción opcional" maxlength="200"
+        style="width:100%; background:var(--card-hover); color:var(--fg); border:1px solid var(--accent);
+        padding:10px; border-radius:6px; resize:vertical; min-height:80px;"></textarea>
+    </div>
+    <div class="modal-footer">
+      <button class="modal-btn modal-btn-cancel" id="cancelCreate">Cancelar</button>
+      <button class="modal-btn modal-btn-confirm" id="confirmCreate">Crear</button>
     </div>
   `;
 
-  document.body.appendChild(modal);
+  overlay.appendChild(modal);
+  document.body.appendChild(overlay);
 
   const nameInput = modal.querySelector('#playlistName');
   const descInput = modal.querySelector('#playlistDescription');
@@ -130,10 +132,10 @@ function showCreatePlaylistModal() {
 
   nameInput.focus();
 
-  const closeModal = () => modal.remove();
+  const closeModal = () => overlay.remove();
 
   cancelBtn.onclick = closeModal;
-  modal.onclick = (e) => e.target === modal && closeModal();
+  overlay.onclick = (e) => e.target === overlay && closeModal();
 
   confirmBtn.onclick = async () => {
     const name = nameInput.value.trim();
@@ -173,42 +175,45 @@ function showCreatePlaylistModal() {
  * @param {Object} playlist - Playlist to edit
  */
 function showEditPlaylistModal(playlist) {
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay';
+
   const modal = document.createElement('div');
   modal.className = 'modal-container';
+  modal.style.maxWidth = '600px';
   modal.innerHTML = `
-    <div class="modal" style="max-width: 600px;">
-      <div class="modal-header">
-        <h3>Editar Playlist</h3>
-      </div>
-      <div class="modal-body">
-        <label>Nombre:</label>
-        <input type="text" id="playlistName" value="${playlist.name}" maxlength="50"
-          style="width:100%; background:var(--card-hover); color:var(--fg); border:1px solid var(--accent);
-          padding:10px; border-radius:6px; margin-bottom:15px;">
+    <div class="modal-header">
+      <h3>Editar Playlist</h3>
+    </div>
+    <div class="modal-body">
+      <label>Nombre:</label>
+      <input type="text" id="playlistName" value="${playlist.name}" maxlength="50"
+        style="width:100%; background:var(--card-hover); color:var(--fg); border:1px solid var(--accent);
+        padding:10px; border-radius:6px; margin-bottom:15px;">
 
-        <label>Descripción:</label>
-        <textarea id="playlistDescription" maxlength="200"
-          style="width:100%; background:var(--card-hover); color:var(--fg); border:1px solid var(--accent);
-          padding:10px; border-radius:6px; resize:vertical; min-height:80px; margin-bottom:15px;">${playlist.description || ''}</textarea>
+      <label>Descripción:</label>
+      <textarea id="playlistDescription" maxlength="200"
+        style="width:100%; background:var(--card-hover); color:var(--fg); border:1px solid var(--accent);
+        padding:10px; border-radius:6px; resize:vertical; min-height:80px; margin-bottom:15px;">${playlist.description || ''}</textarea>
 
-        <label>Archivos en la playlist (${playlist.files.length}):</label>
-        <div id="playlistFiles" style="max-height:200px; overflow-y:auto; background:var(--card-hover);
-          padding:10px; border-radius:6px; margin-bottom:15px;">
-          ${playlist.files.length === 0 ? '<p style="opacity:0.6; text-align:center;">Sin archivos</p>' : ''}
-        </div>
+      <label>Archivos en la playlist (${playlist.files.length}):</label>
+      <div id="playlistFiles" style="max-height:200px; overflow-y:auto; background:var(--card-hover);
+        padding:10px; border-radius:6px; margin-bottom:15px;">
+        ${playlist.files.length === 0 ? '<p style="opacity:0.6; text-align:center;">Sin archivos</p>' : ''}
+      </div>
 
-        <button id="addFilesBtn" class="btn-primary" style="width:100%; margin-bottom:10px;">
-          ➕ Agregar archivos
-        </button>
-      </div>
-      <div class="modal-footer">
-        <button class="modal-btn modal-btn-cancel" id="cancelEdit">Cancelar</button>
-        <button class="modal-btn modal-btn-confirm" id="confirmEdit">Guardar</button>
-      </div>
+      <button id="addFilesBtn" class="btn-primary" style="width:100%; margin-bottom:10px;">
+        ➕ Agregar archivos
+      </button>
+    </div>
+    <div class="modal-footer">
+      <button class="modal-btn modal-btn-cancel" id="cancelEdit">Cancelar</button>
+      <button class="modal-btn modal-btn-confirm" id="confirmEdit">Guardar</button>
     </div>
   `;
 
-  document.body.appendChild(modal);
+  overlay.appendChild(modal);
+  document.body.appendChild(overlay);
 
   const nameInput = modal.querySelector('#playlistName');
   const descInput = modal.querySelector('#playlistDescription');
@@ -220,10 +225,10 @@ function showEditPlaylistModal(playlist) {
   // Render current files
   renderPlaylistFiles(filesContainer, playlist.files);
 
-  const closeModal = () => modal.remove();
+  const closeModal = () => overlay.remove();
 
   cancelBtn.onclick = closeModal;
-  modal.onclick = (e) => e.target === modal && closeModal();
+  overlay.onclick = (e) => e.target === overlay && closeModal();
 
   addFilesBtn.onclick = () => showAddFilesModal(playlist, filesContainer);
 
@@ -307,38 +312,41 @@ function showAddFilesModal(playlist, filesContainer) {
     return;
   }
 
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay';
+
   const modal = document.createElement('div');
   modal.className = 'modal-container';
+  modal.style.maxWidth = '500px';
   modal.innerHTML = `
-    <div class="modal" style="max-width: 500px;">
-      <div class="modal-header">
-        <h3>Agregar archivos</h3>
+    <div class="modal-header">
+      <h3>Agregar archivos</h3>
+    </div>
+    <div class="modal-body">
+      <div id="availableFilesList" style="max-height:400px; overflow-y:auto;">
+        ${availableFiles.map(file => `
+          <label style="display:flex; align-items:center; padding:8px; background:var(--card-hover);
+            border-radius:4px; margin-bottom:5px; cursor:pointer;">
+            <input type="checkbox" value="${file.url}" data-name="${file.name}"
+              style="margin-right:10px; cursor:pointer;">
+            <span style="font-size:0.9rem;">${file.name}</span>
+          </label>
+        `).join('')}
       </div>
-      <div class="modal-body">
-        <div id="availableFilesList" style="max-height:400px; overflow-y:auto;">
-          ${availableFiles.map(file => `
-            <label style="display:flex; align-items:center; padding:8px; background:var(--card-hover);
-              border-radius:4px; margin-bottom:5px; cursor:pointer;">
-              <input type="checkbox" value="${file.url}" data-name="${file.name}"
-                style="margin-right:10px; cursor:pointer;">
-              <span style="font-size:0.9rem;">${file.name}</span>
-            </label>
-          `).join('')}
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button class="modal-btn modal-btn-cancel" id="cancelAdd">Cancelar</button>
-        <button class="modal-btn modal-btn-confirm" id="confirmAdd">Agregar seleccionados</button>
-      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="modal-btn modal-btn-cancel" id="cancelAdd">Cancelar</button>
+      <button class="modal-btn modal-btn-confirm" id="confirmAdd">Agregar seleccionados</button>
     </div>
   `;
 
-  document.body.appendChild(modal);
+  overlay.appendChild(modal);
+  document.body.appendChild(overlay);
 
   const cancelBtn = modal.querySelector('#cancelAdd');
   const confirmBtn = modal.querySelector('#confirmAdd');
 
-  const closeModal = () => modal.remove();
+  const closeModal = () => overlay.remove();
 
   cancelBtn.onclick = closeModal;
 
