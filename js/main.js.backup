@@ -1,0 +1,139 @@
+/**
+ * @fileoverview Main entry point for Media Hub application.
+ * Coordinates all UI modules and manages global application state.
+ * @author Gabino Ramírez
+ */
+
+import { uploadFile, getFiles, deleteFile } from './api/index.js';
+import { switchTheme, toggleTheme, loadTheme } from './ui/themeManager.js';
+import { renderFiles, changePage, searchFiles } from './ui/fileViewer.js';
+import { playMedia, downloadFile } from './ui/player.js';
+import { setupUploader } from './ui/uploader.js';
+import { showConfirmModal } from './ui/modal.js';
+import { showSuccess, showError, showInfo } from './ui/toast.js';
+
+/** @type {Object} Global state: all files from API */
+let files = [];
+
+/** @type {Array} Filtered files based on search query */
+let filteredFiles = [];
+
+/** @type {number} Current page number for pagination */
+let currentPage = 1;
+
+/**
+ * Shows the loading spinner
+ */
+function showSpinner() {
+  document.querySelector('.spinner').style.display = 'flex';
+}
+
+/**
+ * Hides the loading spinner
+ */
+function hideSpinner() {
+  document.querySelector('.spinner').style.display = 'none';
+}
+
+/**
+ * Loads files from the API and renders them
+ * @async
+ * @throws {Error} If API request fails
+ */
+async function loadFiles() {
+  showSpinner();
+  try {
+    files = await getFiles();
+    filteredFiles = files.files;
+    currentPage = 1;
+    renderFiles(filteredFiles, currentPage);
+  } catch (error) {
+    showError("Error al cargar archivos. Por favor, intenta de nuevo.");
+    console.log(error);
+  } finally {
+    hideSpinner();
+  }
+}
+
+/**
+ * Initializes all event listeners for the application
+ */
+function initEvents() {
+  loadTheme();
+
+  document.querySelectorAll('[data-theme]').forEach((btn) =>
+    btn.addEventListener('click', (e) => {
+      const theme = e.target.dataset.theme;
+      switchTheme(theme);
+    })
+  );
+
+  document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+
+  document.getElementById('searchInput').addEventListener('input', (e) => {
+    filteredFiles = searchFiles(files, e.target.value);
+    currentPage = 1;
+    renderFiles(filteredFiles, currentPage);
+  });
+
+  document.getElementById('prevPage').addEventListener('click', () => {
+    currentPage = changePage(filteredFiles, currentPage, -1);
+  });
+
+  document.getElementById('nextPage').addEventListener('click', () => {
+    currentPage = changePage(filteredFiles, currentPage, 1);
+  });
+
+  setupUploader(loadFiles);
+
+  document.addEventListener('click', (e) => {
+    if (e.target.matches('.play-btn')) {
+      const url = e.target.dataset.url;
+      const fileData = filteredFiles.find(f => f.url === url);
+      playMedia(url, fileData, filteredFiles);
+    }
+    if (e.target.matches('.download-btn')) {
+      const url = e.target.dataset.url;
+      downloadFile(url);
+    }
+    if (e.target.matches('.delete-btn')) {
+      const filename = e.target.dataset.filename;
+      handleDelete(filename);
+    }
+  });
+}
+
+/**
+ * Handles file deletion with confirmation modal
+ * @param {string} filename - Name of the file to delete
+ */
+async function handleDelete(filename) {
+  showConfirmModal({
+    title: '¿Eliminar archivo?',
+    message: `¿Estás seguro de que quieres eliminar "${filename}"? Esta acción no se puede deshacer.`,
+    confirmText: 'Eliminar',
+    cancelText: 'Cancelar',
+    onConfirm: async () => {
+      showSpinner();
+      try {
+        const response = await deleteFile(filename);
+        if (response.success) {
+          showSuccess(`Archivo "${filename}" eliminado correctamente`);
+          await loadFiles(); // Reload file list
+        } else {
+          showError('Error al eliminar: ' + response.message);
+        }
+      } catch (error) {
+        showError('Error al eliminar el archivo. Por favor, intenta de nuevo.');
+        console.error(error);
+      } finally {
+        hideSpinner();
+      }
+    }
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  initEvents();
+  loadFiles();
+});

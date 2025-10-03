@@ -1,11 +1,20 @@
-// js/ui/themeManager.js
+/**
+ * @fileoverview Theme management system for Media Hub.
+ * Handles switching between light, dark, and metal themes with localStorage persistence.
+ */
 
+/** @type {Object<string, string>} Map of theme names to their CSS file paths */
 const themes = {
   light: "styles/themes/light.css",
   dark: "styles/themes/dark.css",
   metal: "styles/themes/metal.css",
 };
 
+/**
+ * Switches to a specific theme
+ * Plays guitar riff if switching to metal theme
+ * @param {string} theme - Theme name (light|dark|metal)
+ */
 export function switchTheme(theme) {
   const link = document.getElementById("themeStylesheet");
   if (themes[theme]) {
@@ -23,6 +32,9 @@ export function switchTheme(theme) {
   }
 }
 
+/**
+ * Toggles through available themes in sequence (metal → dark → light → metal)
+ */
 export function toggleTheme() {
   const current = localStorage.getItem("theme") || "metal";
   const next =
@@ -30,6 +42,9 @@ export function toggleTheme() {
   switchTheme(next);
 }
 
+/**
+ * Loads the saved theme from localStorage or defaults to metal
+ */
 export function loadTheme() {
   const savedTheme = localStorage.getItem("theme") || "metal";
   switchTheme(savedTheme);

@@ -1,0 +1,158 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## Project Overview
+
+**Media Hub** is a private multimedia management SPA for Jazmín and Gabino. Built with vanilla JavaScript (ES modules) and PHP backend, featuring audio/video/image upload, preview, playback, and dynamic theming with a special "pink-metal" mode that plays a guitar riff.
+
+## Development Commands
+
+### Running the Application
+```bash
+php -S localhost:8000
+```
+The app will be available at `http://localhost:8000`
+
+### Testing
+```bash
+npm test          # Run all tests with Vitest
+```
+
+Tests are located in `js/api/index.test.js` and `js/ui/fileViewer.test.js`
+
+## Architecture Overview
+
+### Frontend (Vanilla JS + ES Modules)
+
+**Entry Point**: `js/main.js`
+- Initializes the app on DOMContentLoaded
+- Coordinates all UI modules
+- Manages global state (`files`, `filteredFiles`, `currentPage`)
+- Sets up event listeners for theme toggle, search, pagination, and file interactions
+
+**Module Structure**:
+- `js/api/index.js` - API communication layer (getFiles, uploadFile)
+- `js/ui/fileViewer.js` - Renders file list with pagination (6 items per page), handles search
+- `js/ui/uploader.js` - Drag-and-drop uploader with multi-file support, preview generation
+- `js/ui/themeManager.js` - Theme switching (light/dark/metal), persists to localStorage
+- `js/ui/player.js` - Audio playback and file download functionality
+- `js/utils/debounce.js` - Utility function for debouncing
+
+**Key Frontend Patterns**:
+- All state managed in `main.js` - modules are stateless and functional
+- Event delegation used for dynamically rendered file controls (play/download buttons)
+- File previews generated client-side using `URL.createObjectURL()`
+- Guitar riff plays when "metal" theme is activated OR after successful upload (if metal theme is active)
+
+### Backend (PHP)
+
+**API Endpoints**:
+
+#### `GET /api/v1.php` - List Files
+Lists files with filtering, sorting, and pagination.
+
+**Query Parameters:**
+- `type` (string, optional) - Filter by file type: `all`, `audio`, `video`, `image`. Default: `all`
+- `order` (string, optional) - Sort order: `date_desc`, `date_asc`, `name_desc`, `name_asc`. Default: `date_desc`
+- `page` (integer, optional) - Page number for pagination. Default: `1`
+- `perPage` (integer, optional) - Items per page. Default: `10`
+
+**Response Format:**
+```json
+{
+  "type": "audio",
+  "page": 1,
+  "perPage": 10,
+  "total": 25,
+  "order": "date_desc",
+  "files": [
+    {
+      "name": "song.mp3",
+      "url": "/files/song.mp3",
+      "sizeMB": 3.45,
+      "modified": "2025-05-01 12:00:00",
+      "type": "audio",
+      "extension": "mp3"
+    }
+  ]
+}
+```
+
+**Implementation Details:**
+- Scans `/files/` directory for matching files
+- Filters by type if specified
+- Sorts based on `order` parameter (name or modification date)
+- Returns paginated subset of results
+- File type determined by extension using `getFileType()` utility
+
+#### `POST /api/upload.php` - Upload Files
+Uploads one or multiple files to the server.
+
+**Request Format:**
+- Content-Type: `multipart/form-data`
+- Field name: `archivo[]` (array notation for multiple files)
+- Max file size: 20MB per file
+
+**Allowed File Types:**
+- Audio: mp3, wav, ogg
+- Video: mp4, mov, webm
+- Image: jpg, jpeg, png, gif, webp
+
+**Response Format:**
+```json
+{
+  "success": true,
+  "uploaded": 3,
+  "errors": [],
+  "meta": {
+    "uploadDir": "/path/to/files/",
+    "files": [...]
+  }
+}
+```
+
+**Validation:**
+1. Extension validation against allowed list
+2. MIME type validation using `mime_content_type()`
+3. File size validation (max 20MB)
+4. Filename sanitization (transliteration, special char removal)
+5. Duplicate handling (auto-increment with `-N` suffix)
+
+**Error Handling:**
+- Returns `success: false` if no files uploaded successfully
+- `errors` array contains specific error messages per file
+- Partial success possible (some files upload, others fail)
+
+**Configuration**:
+- `config.php` - Environment-aware paths (local vs production)
+  - Set `APP_ENV` environment variable to switch between 'local' and 'production'
+  - Defines file storage folder and web path for each environment
+- `api/utils.php` - Shared utility functions (file type detection, etc.)
+
+**File Storage**:
+- Files stored in `files/` directory
+- Allowed types: audio (mp3, wav, ogg), video (mp4, mov, webm), image (jpg, jpeg, png, gif, webp)
+
+### Theming System
+
+Three themes available: `light`, `dark`, `metal` (default)
+- Theme stylesheets in `styles/themes/*.css`
+- Theme preference persisted to localStorage
+- Metal theme triggers guitar riff sound effect (`assets/riff.mp3`)
+- Toggle button cycles: metal → dark → light → metal
+
+### Key Implementation Details
+
+- **Multiple file uploads**: Frontend sends FormData with `archivo[]` keys, backend handles array normalization
+- **Client-side pagination**: Frontend receives all files matching criteria, paginates locally (6 per page)
+- **Search**: Filters files by name match, resets to page 1 on new search
+- **Preview system**: Shows different preview elements based on MIME type (img/audio/video tags)
+- **Filename sanitization**: Backend transliterates UTF-8 to ASCII, removes special chars, handles duplicates
+
+## Important Notes
+
+- No build process required - uses native ES modules
+- PHP 8.0+ required for arrow function syntax in `api/v1.php`
+- Test environment uses `happy-dom` for DOM simulation with Vitest
+- The project is designed for private use between two people (Jaz & Gabo)
