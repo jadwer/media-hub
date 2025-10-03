@@ -558,43 +558,46 @@ function showRenameModal(oldFilename) {
   const extension = oldFilename.substring(oldFilename.lastIndexOf('.'));
   const nameWithoutExt = oldFilename.substring(0, oldFilename.lastIndexOf('.'));
 
+  // Create overlay
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay';
+
   // Create modal
   const modal = document.createElement('div');
   modal.className = 'modal-container';
   modal.innerHTML = `
-    <div class="modal">
-      <div class="modal-header">
-        <h3>Renombrar archivo</h3>
+    <div class="modal-header">
+      <h3>Renombrar archivo</h3>
+    </div>
+    <div class="modal-body">
+      <p style="margin-bottom: 15px; color: var(--fg); opacity: 0.8;">
+        Nombre actual: <strong>${oldFilename}</strong>
+      </p>
+      <label for="newFileName" style="display: block; margin-bottom: 8px; color: var(--fg);">
+        Nuevo nombre:
+      </label>
+      <div style="display: flex; gap: 5px; align-items: center;">
+        <input
+          type="text"
+          id="newFileName"
+          value="${nameWithoutExt}"
+          style="flex: 1; background: var(--card-hover); color: var(--fg); border: 1px solid var(--accent); padding: 10px; border-radius: 6px; font-size: 14px;"
+          maxlength="100"
+        />
+        <span style="color: var(--fg); font-weight: 600;">${extension}</span>
       </div>
-      <div class="modal-body">
-        <p style="margin-bottom: 15px; color: var(--fg); opacity: 0.8;">
-          Nombre actual: <strong>${oldFilename}</strong>
-        </p>
-        <label for="newFileName" style="display: block; margin-bottom: 8px; color: var(--fg);">
-          Nuevo nombre:
-        </label>
-        <div style="display: flex; gap: 5px; align-items: center;">
-          <input
-            type="text"
-            id="newFileName"
-            value="${nameWithoutExt}"
-            style="flex: 1; background: var(--card-hover); color: var(--fg); border: 1px solid var(--accent); padding: 10px; border-radius: 6px; font-size: 14px;"
-            maxlength="100"
-          />
-          <span style="color: var(--fg); font-weight: 600;">${extension}</span>
-        </div>
-        <p style="margin-top: 10px; font-size: 0.85rem; color: var(--fg); opacity: 0.6;">
-          Solo letras, números, espacios, guiones y puntos.
-        </p>
-      </div>
-      <div class="modal-footer">
-        <button class="modal-btn modal-btn-cancel" id="cancelRename">Cancelar</button>
-        <button class="modal-btn modal-btn-confirm" id="confirmRename">Renombrar</button>
-      </div>
+      <p style="margin-top: 10px; font-size: 0.85rem; color: var(--fg); opacity: 0.6;">
+        Solo letras, números, espacios, guiones y puntos.
+      </p>
+    </div>
+    <div class="modal-footer">
+      <button class="modal-btn modal-btn-cancel" id="cancelRename">Cancelar</button>
+      <button class="modal-btn modal-btn-confirm" id="confirmRename">Renombrar</button>
     </div>
   `;
 
-  document.body.appendChild(modal);
+  overlay.appendChild(modal);
+  document.body.appendChild(overlay);
 
   const input = modal.querySelector('#newFileName');
   const cancelBtn = modal.querySelector('#cancelRename');
@@ -608,15 +611,15 @@ function showRenameModal(oldFilename) {
 
   // Close modal
   const closeModal = () => {
-    modal.remove();
+    overlay.remove();
   };
 
   // Cancel button
   cancelBtn.onclick = closeModal;
 
   // Close on background click
-  modal.onclick = (e) => {
-    if (e.target === modal) {
+  overlay.onclick = (e) => {
+    if (e.target === overlay) {
       closeModal();
     }
   };
