@@ -1,3 +1,7 @@
+<?php
+// Set security headers
+require_once __DIR__ . '/api/security.php';
+?>
 <!DOCTYPE html>
 <html lang="es">
   <head>
